@@ -193,6 +193,44 @@ section{display:flex; flex-direction:column; gap:18px; scroll-margin-top: 20px;}
 .type-card .en{font-size:11.5px; color:var(--ink-faint); direction:ltr; text-align:left; font-family:Tahoma,sans-serif;}
 .type-card p{font-size:13px; color:var(--ink-soft);}
 
+/* ---------- submit-to-results form ---------- */
+.submit-row{
+  display:flex; gap:10px; flex-wrap:wrap; align-items:center;
+  border-top:1px dashed var(--line); padding-top:16px;
+}
+.submit-row input[type="text"]{
+  font-family:inherit; font-size:14px; border-radius:11px; padding:11px 14px;
+  border:1.5px solid var(--line); background:var(--surface-2); color:var(--ink);
+  flex:1 1 200px; min-width:0;
+}
+.submit-row input[type="text"]:focus-visible{outline:2px solid var(--accent); outline-offset:1px;}
+.submit-status{font-size:13px; color:var(--ink-faint);}
+.submit-status.ok{color:var(--accent);}
+.submit-status.err{color:var(--t8);}
+
+/* ---------- results (shared) ---------- */
+.people-grid{display:flex; flex-direction:column; gap:14px;}
+.people-empty{font-size:13.5px; color:var(--ink-faint);}
+.person{
+  background:var(--surface); border:1px solid var(--line-soft); border-radius:16px; padding:18px;
+  display:flex; flex-direction:column; gap:12px; box-shadow:var(--shadow);
+}
+.person-head{display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px;}
+.person-head h3{font-size:17px; display:flex; align-items:center; gap:8px;}
+.person-head .when{font-size:12px; color:var(--ink-faint); font-variant-numeric:tabular-nums;}
+.person-badges{display:flex; gap:6px; flex-wrap:wrap;}
+.pbadge{
+  font-size:12px; font-weight:600; padding:4px 10px; border-radius:99px; color:#fff;
+}
+.person dl{display:grid; grid-template-columns: 110px 1fr; gap:8px 12px; margin:0;}
+@media (max-width:520px){.person dl{grid-template-columns:1fr;}}
+.person dt{font-size:12.5px; color:var(--ink-faint); font-weight:600;}
+.person dd{margin:0; font-size:13.5px; color:var(--ink-soft);}
+.person .quote{
+  font-size:13.5px; color:var(--ink); background:var(--surface-2); border-radius:10px;
+  padding:10px 12px; border:1px dashed var(--line);
+}
+
 footer{
   border-top:1px solid var(--line-soft); padding-top:18px; font-size:12.5px; color:var(--ink-faint);
   display:flex; flex-direction:column; gap:4px;
@@ -216,6 +254,7 @@ footer a{color:var(--ink-faint);}
     <nav class="jump">
       <a href="#quiz">شروع آزمون</a>
       <a href="#types">نه تیپ شخصیتی</a>
+      <a href="#results">نتایج ثبت‌شده</a>
     </nav>
   </div>
 
@@ -245,6 +284,11 @@ footer a{color:var(--ink-faint);}
       </div>
       <div class="result-top" id="resultTop"></div>
       <div class="bars" id="resultBars"></div>
+      <div class="submit-row">
+        <input type="text" id="nameInput" maxlength="40" placeholder="اسمت رو بنویس...">
+        <button class="btn primary" id="submitBtn">ثبت در جدول نتایج</button>
+        <span class="submit-status" id="submitStatus"></span>
+      </div>
     </div>
   </section>
 
@@ -254,6 +298,14 @@ footer a{color:var(--ink-faint);}
       <p class="sub">خلاصه‌ای از انگیزهٔ اصلی، نقاط قوت و چالش هر تیپ.</p>
     </div>
     <div class="type-grid" id="typeGrid"></div>
+  </section>
+
+  <section id="results">
+    <div class="section-head">
+      <h2>نتایج ثبت‌شده</h2>
+      <p class="sub">هرکس آزمون را کامل کند و اسمش را ثبت کند، همین‌جا برای همه اضافه می‌شود.</p>
+    </div>
+    <div class="people-grid" id="peopleGrid"><p class="people-empty">در حال بارگذاری نتایج...</p></div>
   </section>
 
   <footer>
@@ -473,6 +525,8 @@ footer a{color:var(--ink-faint);}
     document.getElementById('resultPanel').hidden = true;
   });
 
+  var lastCounts = null;
+
   scoreBtn.addEventListener('click', function(){
     var counts = {1:0,2:0,3:0,4:0,5:0,6:0,7:0,8:0,9:0};
     questions.forEach(function(pair, qi){
@@ -482,9 +536,52 @@ footer a{color:var(--ink-faint);}
       var t = col2type[col];
       counts[t] += 1;
     });
+    lastCounts = counts;
     renderResult(counts);
+    document.getElementById('submitStatus').textContent = '';
+    document.getElementById('submitStatus').className = 'submit-status';
     document.getElementById('resultPanel').hidden = false;
     document.getElementById('resultPanel').scrollIntoView({behavior:'smooth', block:'start'});
+  });
+
+  var nameInput = document.getElementById('nameInput');
+  var submitBtn = document.getElementById('submitBtn');
+  var submitStatus = document.getElementById('submitStatus');
+
+  submitBtn.addEventListener('click', function(){
+    var name = (nameInput.value || '').trim();
+    if(!lastCounts){
+      submitStatus.textContent = 'اول نتیجه‌ات رو نمایش بده.';
+      submitStatus.className = 'submit-status err';
+      return;
+    }
+    if(!name){
+      submitStatus.textContent = 'اسمت رو بنویس.';
+      submitStatus.className = 'submit-status err';
+      nameInput.focus();
+      return;
+    }
+    submitBtn.disabled = true;
+    submitStatus.textContent = 'در حال ثبت...';
+    submitStatus.className = 'submit-status';
+    fetch('/api/results', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({name: name, counts: lastCounts})
+    }).then(function(res){
+      if(!res.ok) throw new Error('bad-response');
+      return res.json();
+    }).then(function(){
+      submitStatus.textContent = 'ثبت شد! پایین همین صفحه، تو جدول نتایج ببینش.';
+      submitStatus.className = 'submit-status ok';
+      nameInput.value = '';
+      loadResults();
+    }).catch(function(){
+      submitStatus.textContent = 'ثبت نشد، دوباره امتحان کن.';
+      submitStatus.className = 'submit-status err';
+    }).finally(function(){
+      submitBtn.disabled = false;
+    });
   });
 
   function renderResult(counts){
@@ -530,9 +627,81 @@ footer a{color:var(--ink-faint);}
     typeGrid.appendChild(el);
   });
 
+  // ---- shared "نتایج ثبت‌شده" table ----
+  var peopleGrid = document.getElementById('peopleGrid');
+  var faDate = function(iso){
+    try{
+      var d = new Date(iso);
+      return toFa(d.getFullYear()) + '/' + toFa(String(d.getMonth()+1).padStart(2,'0')) + '/' + toFa(String(d.getDate()).padStart(2,'0'));
+    }catch(e){ return ''; }
+  };
+
+  function topTypesFromCounts(counts, n){
+    return Object.keys(counts).map(Number)
+      .sort(function(a,b){ return (counts[b]||0)-(counts[a]||0); })
+      .slice(0, n || 3);
+  }
+
+  function renderPeople(list){
+    peopleGrid.innerHTML = '';
+    if(!list || !list.length){
+      peopleGrid.innerHTML = '<p class="people-empty">هنوز نتیجه‌ای ثبت نشده — اولین نفر باش!</p>';
+      return;
+    }
+    list.forEach(function(p){
+      var el = document.createElement('div');
+      el.className = 'person';
+
+      var tops = p.kind === 'manual' ? (p.tops || []) : topTypesFromCounts(p.counts || {}, 3);
+      var badges = tops.map(function(t){
+        if(!types[t]) return '';
+        return '<span class="pbadge" style="background:'+types[t].color+'">تیپ '+toFa(t)+' · '+types[t].fa+'</span>';
+      }).join('');
+
+      var head = '<div class="person-head"><h3>'+(p.emoji ? p.emoji+' ' : '')+escapeHtml(p.name)+'</h3>'+
+                 '<span class="when">'+faDate(p.submittedAt)+'</span></div>'+
+                 '<div class="person-badges">'+badges+'</div>';
+
+      var body = '';
+      if(p.kind === 'manual'){
+        body =
+          '<dl>'+
+            '<dt>موتور اصلی</dt><dd>'+escapeHtml(p.motor||'')+'</dd>'+
+            '<dt>نقطهٔ قوت</dt><dd>'+escapeHtml(p.strength||'')+'</dd>'+
+            '<dt>ریسک احتمالی</dt><dd>'+escapeHtml(p.risk||'')+'</dd>'+
+          '</dl>'+
+          (p.quote ? '<div class="quote">«'+escapeHtml(p.quote)+'»</div>' : '');
+      } else {
+        var totalAnswered = Object.keys(p.counts||{}).reduce(function(s,k){ return s + (Number(p.counts[k])||0); }, 0);
+        body = '<p style="font-size:13px;color:var(--ink-faint)">از '+toFa(totalAnswered)+' سؤال پاسخ‌داده‌شده، تیپ اصلی احتمالی همان بالاترین امتیاز است.</p>';
+      }
+
+      el.innerHTML = head + body;
+      peopleGrid.appendChild(el);
+    });
+  }
+
+  function escapeHtml(s){
+    return String(s).replace(/[&<>"']/g, function(c){
+      return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
+    });
+  }
+
+  function loadResults(){
+    fetch('/api/results').then(function(res){
+      if(!res.ok) throw new Error('bad-response');
+      return res.json();
+    }).then(function(list){
+      renderPeople(list);
+    }).catch(function(){
+      peopleGrid.innerHTML = '<p class="people-empty">نتوانستیم نتایج را بارگذاری کنیم. صفحه را رفرش کنید.</p>';
+    });
+  }
+
   restore();
   for(var i=0;i<questions.length;i++) updateOptionStates(i);
   updateProgress();
+  loadResults();
 })();
 </script>
 </body>
