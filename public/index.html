@@ -752,7 +752,8 @@ footer a{color:var(--ink-faint);}
             '<dt>نقطهٔ قوت</dt><dd>'+escapeHtml(p.strength||'')+'</dd>'+
             '<dt>ریسک احتمالی</dt><dd>'+escapeHtml(p.risk||'')+'</dd>'+
           '</dl>'+
-          (p.quote ? '<div class="quote">«'+escapeHtml(p.quote)+'»</div>' : '');
+          (p.quote ? '<div class="quote">«'+escapeHtml(p.quote)+'»</div>' : '')+
+          (p.counts ? buildCountBreakdown(p.counts) : '');
       } else {
         var narrative = buildQuizNarrative(p.counts || {}, tops);
         var breakdown = buildCountBreakdown(p.counts || {});
