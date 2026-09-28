@@ -1,0 +1,539 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>نه‌چهره من</title>
+<meta name="description" content="آزمون تعاملی ۳۶ سؤالی اینیاگرام (RHETI Sampler) به فارسی و انگلیسی، با امتیازدهی خودکار و معرفی نه تیپ شخصیتی">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg: #f3efe6;
+  --bg-soft: #ece5d5;
+  --surface: #fffdf8;
+  --surface-2: #f7f1e4;
+  --ink: #2a241c;
+  --ink-soft: #6b6152;
+  --ink-faint: #948a78;
+  --line: #ddd3bd;
+  --line-soft: #e8e0cd;
+  --accent: #1f7a72;
+  --accent-ink: #ffffff;
+  --accent-soft: #dcece7;
+  --gold: #b8863f;
+  --shadow: 0 1px 2px rgba(42,36,28,.06), 0 8px 24px rgba(42,36,28,.06);
+  color-scheme: light;
+
+  --t1:#3B6E8F; --t2:#C1666B; --t3:#D8A24A; --t4:#8B5FBF; --t5:#4B7F6B;
+  --t6:#5B7DB1; --t7:#E08E45; --t8:#A6423B; --t9:#6FA287;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#191510; --bg-soft:#1f1a14; --surface:#221d16; --surface-2:#28221a;
+    --ink:#f1ebdd; --ink-soft:#c7bda6; --ink-faint:#8f8570;
+    --line:#3a3226; --line-soft:#2c2619;
+    --accent:#4fb3a4; --accent-ink:#0f1a17; --accent-soft:#20332f;
+    --gold:#d9a95c;
+    --shadow: 0 1px 2px rgba(0,0,0,.35), 0 12px 28px rgba(0,0,0,.35);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#191510; --bg-soft:#1f1a14; --surface:#221d16; --surface-2:#28221a;
+  --ink:#f1ebdd; --ink-soft:#c7bda6; --ink-faint:#8f8570;
+  --line:#3a3226; --line-soft:#2c2619;
+  --accent:#4fb3a4; --accent-ink:#0f1a17; --accent-soft:#20332f;
+  --gold:#d9a95c;
+  --shadow: 0 1px 2px rgba(0,0,0,.35), 0 12px 28px rgba(0,0,0,.35);
+  color-scheme: dark;
+}
+
+*{box-sizing:border-box}
+html{background:var(--bg);}
+body{
+  margin:0;
+  direction:rtl; text-align:right;
+  background:var(--bg);
+  color:var(--ink);
+  font-family:'Vazirmatn', 'Segoe UI', Tahoma, sans-serif;
+  padding-inline: 20px;
+  padding-block: 28px;
+  line-height:1.9;
+  min-height:100vh;
+}
+h1,h2,h3{ text-wrap:balance; font-weight:700; margin:0; }
+p{margin:0}
+.wrap{max-width: 880px; margin-inline:auto; display:flex; flex-direction:column; gap:56px;}
+
+/* ---------- header ---------- */
+.hero{display:flex; flex-direction:column; gap:14px;}
+.eyebrow{
+  display:inline-flex; align-items:center; gap:8px; align-self:flex-start;
+  font-size:12.5px; letter-spacing:.04em; color:var(--accent);
+  background:var(--accent-soft); border-radius:99px; padding:6px 14px;
+  font-weight:600;
+}
+.hero h1{font-size:clamp(28px,5.5vw,40px); letter-spacing:-.01em;}
+.hero .dedication{color:var(--gold); font-size:14px; font-weight:500;}
+.hero .lead{color:var(--ink-soft); font-size:16px; max-width:60ch;}
+.hero .note{
+  font-size:13.5px; color:var(--ink-faint); background:var(--surface-2);
+  border:1px solid var(--line-soft); border-radius:12px; padding:12px 16px;
+}
+
+/* ---------- nav pills ---------- */
+.jump{display:flex; gap:8px; flex-wrap:wrap;}
+.jump a{
+  font-size:13.5px; color:var(--ink-soft); text-decoration:none;
+  border:1px solid var(--line); border-radius:99px; padding:7px 14px;
+  background:var(--surface);
+}
+.jump a:hover{border-color:var(--accent); color:var(--accent);}
+
+/* ---------- section shell ---------- */
+section{display:flex; flex-direction:column; gap:18px; scroll-margin-top: 20px;}
+.section-head{display:flex; flex-direction:column; gap:6px;}
+.section-head h2{font-size:22px;}
+.section-head .sub{color:var(--ink-soft); font-size:14.5px; max-width:65ch;}
+
+/* ---------- quiz ---------- */
+.progress-bar{
+  position:sticky; top: env(safe-area-inset-top, 0px);
+  z-index:5; background:var(--bg); padding-block:10px 4px;
+  display:flex; flex-direction:column; gap:8px;
+}
+.progress-row{display:flex; justify-content:space-between; align-items:baseline; font-size:13px; color:var(--ink-soft);}
+.progress-row b{color:var(--ink); font-variant-numeric:tabular-nums;}
+.progress-track{height:6px; border-radius:99px; background:var(--line-soft); overflow:hidden;}
+.progress-fill{height:100%; background:var(--accent); border-radius:99px; width:0%; transition:width .25s ease;}
+
+.qcard{
+  background:var(--surface); border:1px solid var(--line-soft); border-radius:16px;
+  padding:18px; display:flex; flex-direction:column; gap:12px; box-shadow:var(--shadow);
+}
+.qnum{
+  display:inline-flex; align-items:center; justify-content:center;
+  width:26px; height:26px; border-radius:8px; background:var(--accent-soft); color:var(--accent);
+  font-size:13px; font-weight:700; flex:none; font-variant-numeric:tabular-nums;
+}
+.qhead{display:flex; align-items:center; gap:10px;}
+.qhead span{font-size:13px; color:var(--ink-faint);}
+.options{display:flex; flex-direction:column; gap:10px;}
+.opt{
+  display:flex; align-items:flex-start; gap:10px; text-align:right;
+  border:1.5px solid var(--line); border-radius:12px; padding:12px 14px;
+  background:var(--surface-2); cursor:pointer; width:100%;
+  font-family:inherit; color:var(--ink); transition: border-color .15s, background .15s;
+}
+.opt:hover{border-color:var(--accent);}
+.opt:focus-visible{outline:2px solid var(--accent); outline-offset:2px;}
+.opt .dot{
+  width:18px; height:18px; border-radius:50%; border:1.5px solid var(--ink-faint);
+  flex:none; margin-top:3px; position:relative;
+}
+.opt.selected{border-color:var(--accent); background:var(--accent-soft);}
+.opt.selected .dot{border-color:var(--accent);}
+.opt.selected .dot::after{
+  content:''; position:absolute; inset:3px; border-radius:50%; background:var(--accent);
+}
+.opt .txt{display:flex; flex-direction:column; gap:3px;}
+.opt .fa{font-size:14.5px; font-weight:500;}
+.opt .en{font-size:12px; color:var(--ink-faint); direction:ltr; text-align:left; font-family: Tahoma, sans-serif;}
+
+.quiz-actions{display:flex; gap:10px; flex-wrap:wrap; align-items:center;}
+.btn{
+  font-family:inherit; font-size:14px; font-weight:600; border-radius:11px; padding:11px 20px;
+  border:1.5px solid var(--line); background:var(--surface); color:var(--ink); cursor:pointer;
+}
+.btn.primary{background:var(--accent); border-color:var(--accent); color:var(--accent-ink);}
+.btn:disabled{opacity:.45; cursor:not-allowed;}
+.hint{font-size:13px; color:var(--ink-faint);}
+
+/* ---------- results ---------- */
+.result-panel{
+  background:var(--surface); border:1px solid var(--line-soft); border-radius:18px; padding:22px;
+  display:flex; flex-direction:column; gap:16px; box-shadow:var(--shadow);
+}
+.result-top{display:flex; flex-wrap:wrap; gap:10px; align-items:center;}
+.result-top .badge{
+  display:flex; align-items:center; gap:8px; border-radius:12px; padding:10px 14px;
+  border:1.5px solid var(--line); background:var(--surface-2);
+}
+.result-top .badge .sw{width:12px; height:12px; border-radius:4px; flex:none;}
+.result-top .badge b{font-size:14.5px;}
+.result-top .badge span{font-size:12px; color:var(--ink-faint);}
+
+.bars{display:flex; flex-direction:column; gap:10px;}
+.bar-row{display:grid; grid-template-columns: 100px 1fr 34px; align-items:center; gap:10px;}
+.bar-row .lbl{font-size:13.5px; color:var(--ink-soft); display:flex; align-items:center; gap:6px;}
+.bar-row .lbl .sw{width:9px; height:9px; border-radius:3px; flex:none;}
+.bar-track{height:14px; border-radius:99px; background:var(--line-soft); overflow:hidden;}
+.bar-fill{height:100%; border-radius:99px; transition:width .4s ease;}
+.bar-row .val{font-size:13px; color:var(--ink-faint); font-variant-numeric:tabular-nums; text-align:left;}
+
+/* ---------- type grid ---------- */
+.type-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:12px;}
+@media (max-width:700px){.type-grid{grid-template-columns:repeat(2,1fr);}}
+@media (max-width:480px){.type-grid{grid-template-columns:1fr;}}
+.type-card{
+  border:1px solid var(--line-soft); border-radius:14px; padding:15px; background:var(--surface);
+  display:flex; flex-direction:column; gap:8px; border-inline-start:4px solid var(--tc,var(--accent));
+}
+.type-card .top-row{display:flex; align-items:center; justify-content:space-between; gap:8px;}
+.type-icon{
+  width:40px; height:40px; flex:none; color:var(--tc,var(--accent));
+  background:color-mix(in srgb, var(--tc,var(--accent)) 14%, transparent);
+  border-radius:10px; display:flex; align-items:center; justify-content:center;
+}
+.type-icon svg{width:24px; height:24px;}
+.type-card .num{font-size:12px; color:var(--ink-faint); font-variant-numeric:tabular-nums;}
+.type-card h3{font-size:15.5px;}
+.type-card .en{font-size:11.5px; color:var(--ink-faint); direction:ltr; text-align:left; font-family:Tahoma,sans-serif;}
+.type-card p{font-size:13px; color:var(--ink-soft);}
+
+footer{
+  border-top:1px solid var(--line-soft); padding-top:18px; font-size:12.5px; color:var(--ink-faint);
+  display:flex; flex-direction:column; gap:4px;
+}
+footer a{color:var(--ink-faint);}
+
+@media (prefers-reduced-motion: reduce){
+  .progress-fill,.bar-fill{transition:none;}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="hero">
+    <span class="eyebrow">اینیاگرام · نمونهٔ ۳۶ سؤالی</span>
+    <h1>نه‌چهره من</h1>
+    <p class="dedication">تهیه شده برای کتاب‌نخوان‌های عزیز، با عشق</p>
+    <p class="lead">نسخهٔ آنلاینِ آزمون نمونهٔ RHETI است: به هر ۳۶ جفت جمله، گزینه‌ای را که بیشتر توصیف‌تان می‌کند انتخاب کنید تا نمرهٔ نه تیپ شخصیتی اینیاگرام به‌صورت خودکار محاسبه شود.</p>
+    <p class="note">این نسخهٔ نمونه (۳۶ سؤالی) بر پایهٔ آزمون کامل RHETI نسخهٔ ۲.۵ (۱۴۴ سؤالی) طراحی شده و برعکس نسخهٔ اصلی، اعتبارسنجی علمی ندارد. نتیجه را فقط برای خودشناسی و تأمل شخصی به‌کار ببرید.</p>
+    <nav class="jump">
+      <a href="#quiz">شروع آزمون</a>
+      <a href="#types">نه تیپ شخصیتی</a>
+    </nav>
+  </div>
+
+  <section id="quiz">
+    <div class="section-head">
+      <h2>آزمون</h2>
+      <p class="sub">برای هر سؤال، یکی از دو جمله را انتخاب کنید — همانی که تجربهٔ شما را بهتر نشان می‌دهد، نه آن‌که آرزو دارید باشید.</p>
+    </div>
+
+    <div class="progress-bar">
+      <div class="progress-row"><span>پیشرفت</span><b id="progressText">۰ از ۳۶</b></div>
+      <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+    </div>
+
+    <div id="questions"></div>
+
+    <div class="quiz-actions">
+      <button class="btn primary" id="scoreBtn" disabled>نمایش نتیجهٔ من</button>
+      <button class="btn" id="resetBtn">پاک‌کردن پاسخ‌ها</button>
+      <span class="hint" id="remainingHint"></span>
+    </div>
+
+    <div class="result-panel" id="resultPanel" hidden>
+      <div class="section-head">
+        <h2 style="font-size:18px">نتیجهٔ شما</h2>
+        <p class="sub">تیپ اصلی معمولاً یکی از سه گزینهٔ با بالاترین نمره است.</p>
+      </div>
+      <div class="result-top" id="resultTop"></div>
+      <div class="bars" id="resultBars"></div>
+    </div>
+  </section>
+
+  <section id="types">
+    <div class="section-head">
+      <h2>نه تیپ شخصیتی اینیاگرام</h2>
+      <p class="sub">خلاصه‌ای از انگیزهٔ اصلی، نقاط قوت و چالش هر تیپ.</p>
+    </div>
+    <div class="type-grid" id="typeGrid"></div>
+  </section>
+
+  <footer>
+    <span>بر پایهٔ Riso-Hudson Enneagram Type Indicator (RHETI) Sampler، ۳۶ سؤال — Bishop, P. (2007), Wisdom of the Enneagram: A deeper dive.</span>
+    <span>این نسخه اعتبارسنجی علمی ندارد و صرفاً برای خودشناسی و تأمل شخصی است.</span>
+  </footer>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  // A=9 B=6 C=3 D=1 E=4 F=2 G=8 H=5 I=7
+  var col2type = {A:9,B:6,C:3,D:1,E:4,F:2,G:8,H:5,I:7};
+
+  var types = {
+    1:{fa:"اصلاح‌گر", en:"Reformer", color:"var(--t1)",
+       desc:"تیپ عقل‌گرا و آرمان‌گرا با حس قوی درست و غلط. همواره در پی بهبود اوضاع، اما نگران اشتباه‌کردن. منظم و دقیق؛ ممکن است به انتقادگری و کمال‌گرایی بیفتد. چالش: دلخوری و بی‌صبری."},
+    2:{fa:"یاری‌گر", en:"Helper", color:"var(--t2)",
+       desc:"تیپ مراقب و رابطه‌محور؛ همدل، صمیمی و گرم. دوستانه و بخشنده، اما گاهی چاپلوس یا نیازمند «مورد نیاز بودن». چالش: مالکیت و نادیده‌گرفتن نیاز خود."},
+    3:{fa:"موفقیت‌طلب", en:"Achiever", color:"var(--t3)",
+       desc:"تیپ نتیجه‌محور و عمل‌گرا؛ مطمئن، جذاب و پرانرژی. جاه‌طلب و کارآمد، اما گاهی بیش از حد نگران تصویر خود نزد دیگران. چالش: کارگرایی افراطی و رقابت‌طلبی."},
+    4:{fa:"فردگرا", en:"Individualist", color:"var(--t4)",
+       desc:"تیپ حساس و درون‌نگر؛ خودآگاه، بیانگر و صادق در احساسات. خلاق و شخصی، اما دمدمی‌مزاج. به‌خاطر حس آسیب‌پذیری از دیگران فاصله می‌گیرد. چالش: دلتنگی و خودشیفتگی منفی."},
+    5:{fa:"پژوهشگر", en:"Investigator", color:"var(--t5)",
+       desc:"تیپ متمرکز و ذهن‌گرا؛ هوشیار، بینا و کنجکاو. مستقل و نوآور، اما ممکن است در افکار خود غرق و از دیگران فاصله بگیرد. چالش: انزوا و بدبینی."},
+    6:{fa:"وفادار", en:"Loyalist", color:"var(--t6)",
+       desc:"تیپ متعهد و امنیت‌محور؛ قابل‌اعتماد، سخت‌کوش و مسئولیت‌پذیر. عالی در پیش‌بینی مشکلات، اما مضطرب و محتاط. چالش: تردید در خود و بدگمانی."},
+    7:{fa:"شورانگیز", en:"Enthusiast", color:"var(--t7)",
+       desc:"تیپ پرانرژی و تنوع‌طلب؛ برون‌گرا، خوش‌بین و خودجوش. بازیگوش و عملی، اما ممکن است پراکنده و بی‌نظم شود. چالش: بی‌صبری و تکانشی‌بودن."},
+    8:{fa:"چالشگر", en:"Challenger", color:"var(--t8)",
+       desc:"تیپ قدرتمند و مسلط؛ مطمئن به خود، قوی و قاطع. حمایت‌گر و رک، اما گاهی خودمحور و سلطه‌جو. چالش: خشم و ناتوانی در آسیب‌پذیر بودن."},
+    9:{fa:"صلح‌جو", en:"Peacemaker", color:"var(--t9)",
+       desc:"تیپ آرام و فروتن؛ پذیرا، قابل‌اعتماد و باثبات. خلاق و حمایت‌گر، اما گاهی بیش از حد همراه دیگران می‌شود. چالش: کاهلی و لجاجت."}
+  };
+
+  // minimal single-stroke sketches, one per type
+  var typeIcons = {
+    1: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"/><path d="M12 7l2.2 4.8L9 14.2 12 7z"/><circle cx="12" cy="12" r="1"/></svg>',
+    2: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20c-3-2.4-7-5.6-7-9.4A3.6 3.6 0 0 1 12 8a3.6 3.6 0 0 1 7 2.6C19 14.4 15 17.6 12 20z"/></svg>',
+    3: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.5l2.4 5 5.5.6-4.1 3.8 1.1 5.5L12 15.9l-4.9 2.5 1.1-5.5-4.1-3.8 5.5-.6L12 3.5z"/></svg>',
+    4: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c3 4 6 7.4 6 10.5A6 6 0 0 1 6 13.5C6 10.4 9 7 12 3z"/></svg>',
+    5: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="10.5" cy="10.5" r="6"/><path d="M15.2 15.2 20 20"/></svg>',
+    6: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.5l7 2.8v5.4c0 4.6-3 7.6-7 8.8-4-1.2-7-4.2-7-8.8V6.3l7-2.8z"/><path d="M9 12l2 2 4-4"/></svg>',
+    7: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v4M12 17v4M3 12h4M17 12h4M5.6 5.6l2.8 2.8M15.6 15.6l2.8 2.8M18.4 5.6l-2.8 2.8M8.4 15.6l-2.8 2.8"/><circle cx="12" cy="12" r="2.4"/></svg>',
+    8: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c1 3-3 4-3 7.5A3 3 0 0 0 12 14a3 3 0 0 0 3-3.4C15.6 12 16 13.4 16 14.5a4 4 0 0 1-8 0C8 10 12 8 12 3z"/></svg>',
+    9: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 14c6-8 12-8 16-9-1 8-3 13-11 13-2 0-4-.6-5-1"/><path d="M6 17c2-3 6-5 10-6.5"/></svg>'
+  };
+
+  // 36 question pairs — [optionA, optionB], each {fa, en, col}
+  var questions = [
+    [{fa:"من رمانتیک و خیال‌پرداز بوده‌ام.",en:"I've been romantic and imaginative.",col:"E"},
+     {fa:"من عمل‌گرا و واقع‌بین بوده‌ام.",en:"I've been pragmatic and down to earth.",col:"B"}],
+    [{fa:"معمولاً به استقبال درگیری رفته‌ام.",en:"I have tended to take on confrontations.",col:"G"},
+     {fa:"معمولاً از درگیری دوری کرده‌ام.",en:"I have tended to avoid confrontations.",col:"A"}],
+    [{fa:"معمولاً دیپلماتیک، جذاب و جاه‌طلب بوده‌ام.",en:"I have typically been diplomatic, charming, and ambitious.",col:"C"},
+     {fa:"معمولاً رک، رسمی و آرمان‌گرا بوده‌ام.",en:"I have typically been direct, formal, and idealistic.",col:"D"}],
+    [{fa:"معمولاً متمرکز و پرانرژی بوده‌ام.",en:"I have tended to be focused and intense.",col:"H"},
+     {fa:"معمولاً خودجوش و خوش‌گذران بوده‌ام.",en:"I have tended to be spontaneous and fun-loving.",col:"I"}],
+    [{fa:"آدم مهمان‌نوازی بوده‌ام و از راه‌دادن دوستان جدید به زندگی‌ام لذت برده‌ام.",en:"I have been a hospitable person and have enjoyed welcoming new friends into my life.",col:"F"},
+     {fa:"آدم گوشه‌گیری بوده‌ام و چندان با دیگران معاشرت نکرده‌ام.",en:"I have been a private person and have not mixed much with others.",col:"H"}],
+    [{fa:"عموماً به‌آسانی می‌شد مرا عصبانی کرد.",en:'Generally, it\'s been easy to "get a rise" out of me.',col:"G"},
+     {fa:"عموماً به‌سختی می‌شد مرا عصبانی کرد.",en:'Generally, it\'s been difficult to "get a rise" out of me.',col:"A"}],
+    [{fa:"بیشتر آدم زرنگ و جان‌به‌دربرده‌ای بوده‌ام.",en:'I\'ve been more of a "street-smart" survivor.',col:"B"},
+     {fa:"بیشتر آرمان‌گرایی والااندیش بوده‌ام.",en:'I\'ve been more of a "high minded" idealist.',col:"D"}],
+    [{fa:"نیاز داشته‌ام به دیگران محبت نشان دهم.",en:"I have needed to show affection to people.",col:"F"},
+     {fa:"ترجیح داده‌ام فاصلهٔ معینی را با دیگران حفظ کنم.",en:"I have preferred to maintain a certain distance with people.",col:"H"}],
+    [{fa:"وقتی با تجربه‌ای تازه روبه‌رو شده‌ام، معمولاً از خودم پرسیده‌ام آیا به کارم می‌آید.",en:"When presented with a new experience, I've usually asked myself if it would be useful to me.",col:"B"},
+     {fa:"وقتی با تجربه‌ای تازه روبه‌رو شده‌ام، معمولاً از خودم پرسیده‌ام آیا لذت‌بخش است.",en:"When presented with a new experience, I've usually asked myself if it would be enjoyable.",col:"I"}],
+    [{fa:"معمولاً بیش از حد روی خودم تمرکز کرده‌ام.",en:"I have tended to focus too much on myself.",col:"E"},
+     {fa:"معمولاً بیش از حد روی دیگران تمرکز کرده‌ام.",en:"I have tended to focus too much on others.",col:"F"}],
+    [{fa:"دیگران به بینش و دانش من تکیه کرده‌اند.",en:"Others have depended on my insight and knowledge.",col:"H"},
+     {fa:"دیگران به قدرت و قاطعیت من تکیه کرده‌اند.",en:"Others have depended on my strength and decisiveness.",col:"G"}],
+    [{fa:"این‌طور به نظر رسیده که بیش از حد به خودم مطمئن نیستم.",en:"I have come across as being too unsure of myself.",col:"B"},
+     {fa:"این‌طور به نظر رسیده که بیش از حد به خودم مطمئنم.",en:"I have come across as being too sure of myself.",col:"C"}],
+    [{fa:"بیشتر رابطه‌محور بوده‌ام تا هدف‌محور.",en:"I have been more relationship-oriented than goal-oriented.",col:"F"},
+     {fa:"بیشتر هدف‌محور بوده‌ام تا رابطه‌محور.",en:"I have been more goal-oriented than relationship-oriented.",col:"C"}],
+    [{fa:"نتوانسته‌ام خیلی خوب از حق خودم دفاع کنم.",en:"I have not been able to speak up for myself very well.",col:"A"},
+     {fa:"رک و صریح بوده‌ام؛ چیزی را گفته‌ام که دیگران آرزو داشتند جرئت گفتنش را داشتند.",en:"I have been outspoken - I've said what others wished they had the nerve to say.",col:"G"}],
+    [{fa:"برایم سخت بوده دست از بررسی گزینه‌ها بکشم و کاری قطعی انجام دهم.",en:"It's been difficult for me to stop considering alternatives and do something definite.",col:"H"},
+     {fa:"برایم سخت بوده راحت بگیرم و انعطاف‌پذیرتر باشم.",en:"It's been difficult for me to take it easy and be more flexible.",col:"D"}],
+    [{fa:"معمولاً مردد بوده‌ام و کارها را به تعویق انداخته‌ام.",en:"I have tended to be hesitant and procrastinating.",col:"B"},
+     {fa:"معمولاً جسور و سلطه‌جو بوده‌ام.",en:"I have tended to be bold and domineering.",col:"G"}],
+    [{fa:"بی‌میلی‌ام به درگیر شدن بیش از حد، برایم پیش دیگران دردسر درست کرده است.",en:"My reluctance to get too involved has gotten me into trouble with people.",col:"H"},
+     {fa:"اشتیاقم به این‌که دیگران به من وابسته باشند، برایم دردسر درست کرده است.",en:"My eagerness to have people depend on me has gotten me into trouble.",col:"F"}],
+    [{fa:"معمولاً توانسته‌ام احساساتم را کنار بگذارم تا کار را پیش ببرم.",en:"Usually, I have been able to put my feelings aside to get the job done.",col:"C"},
+     {fa:"معمولاً لازم بوده اول با احساساتم کنار بیایم تا بتوانم عمل کنم.",en:"Usually, I have needed to work through my feelings before I could act.",col:"E"}],
+    [{fa:"عموماً منظم و محتاط بوده‌ام.",en:"Generally, I have been methodical and cautious.",col:"B"},
+     {fa:"عموماً ماجراجو بوده‌ام و ریسک کرده‌ام.",en:"Generally, I have been adventurous and taken risks.",col:"I"}],
+    [{fa:"معمولاً آدم حامی و بخشنده‌ای بوده‌ام که از هم‌نشینی با دیگران لذت می‌برد.",en:"I have tended to be a supportive, giving person who enjoys the company of others.",col:"F"},
+     {fa:"معمولاً آدم جدی و کم‌حرفی بوده‌ام که بحث دربارهٔ مسائل را دوست دارد.",en:"I have tended to be a serious, reserved person who like discussing issues.",col:"H"}],
+    [{fa:"اغلب احساس کرده‌ام باید «ستون قدرت» باشم.",en:'I\'ve often felt the need to be a "pillar of strength."',col:"G"},
+     {fa:"اغلب احساس کرده‌ام باید بی‌نقص عمل کنم.",en:"I've often felt the need to perform perfectly.",col:"D"}],
+    [{fa:"معمولاً به پرسیدن سؤال‌های سخت و حفظ استقلالم علاقه داشته‌ام.",en:"I've typically been interested in asking tough questions and maintaining my independence.",col:"H"},
+     {fa:"معمولاً به حفظ ثبات و آرامش ذهنم علاقه داشته‌ام.",en:"I've typically been interested in maintaining my stability and peace of mind.",col:"A"}],
+    [{fa:"بیش از حد سرسخت و بدبین بوده‌ام.",en:"I've been too hard-nosed and skeptical.",col:"H"},
+     {fa:"بیش از حد نرم‌دل و احساساتی بوده‌ام.",en:"I've been too soft-hearted and sentimental.",col:"F"}],
+    [{fa:"نگران بوده‌ام که چیز بهتری را از دست می‌دهم.",en:"I've been worried that I'm missing out on something better.",col:"I"},
+     {fa:"اغلب نگران بوده‌ام که اگر احتیاطم را کنار بگذارم، کسی از من سوءاستفاده می‌کند.",en:"I've often worried that if I let down my guard, someone will take advantage of me.",col:"B"}],
+    [{fa:"عادت کناره‌گیر بودنم دیگران را آزرده است.",en:'My habit of being "stand-offish" has annoyed people.',col:"H"},
+     {fa:"عادت دستور دادن به دیگران، آن‌ها را آزرده است.",en:"My habit of telling people what to do has annoyed people.",col:"G"}],
+    [{fa:"معمولاً وقتی مشکلات به سراغم آمده‌اند، توانسته‌ام نادیده‌شان بگیرم.",en:'Usually, when troubles have gotten to me, I have been able to "tune them out."',col:"A"},
+     {fa:"معمولاً وقتی مشکلات به سراغم آمده‌اند، با چیزی که دوست داشته‌ام به خودم جایزه داده‌ام.",en:"Usually, when troubles have gotten to me, I have treated myself to something I've enjoyed.",col:"I"}],
+    [{fa:"به دوستانم تکیه کرده‌ام و آن‌ها می‌دانسته‌اند که می‌توانند به من تکیه کنند.",en:"I have depended upon my friends and they have known that they can depend on me.",col:"B"},
+     {fa:"به دیگران تکیه نکرده‌ام؛ کارها را خودم به‌تنهایی انجام داده‌ام.",en:"I have not depended on people; I have done things on my own.",col:"H"}],
+    [{fa:"معمولاً جدا‌افتاده و درگیر ذهن خودم بوده‌ام.",en:"I have tended to be detached and preoccupied.",col:"H"},
+     {fa:"معمولاً دمدمی‌مزاج و در خود فرو رفته بوده‌ام.",en:"I have tended to be moody and self-absorbed.",col:"E"}],
+    [{fa:"دوست داشته‌ام دیگران را به چالش بکشم و تکان‌شان دهم.",en:'I have liked to challenge people and "shake them up."',col:"G"},
+     {fa:"دوست داشته‌ام به دیگران آرامش بدهم و تسکین‌شان دهم.",en:"I have liked to comfort people and calm them down.",col:"F"}],
+    [{fa:"عموماً آدم برون‌گرا و اجتماعی بوده‌ام.",en:"I have generally been an outgoing, sociable person.",col:"I"},
+     {fa:"عموماً آدم جدی و منضبط بوده‌ام.",en:"I have generally been an earnest, self-disciplined person.",col:"D"}],
+    [{fa:"معمولاً از نشان دادن توانایی‌هایم خجالت کشیده‌ام.",en:"I've usually been shy about showing my abilities.",col:"H"},
+     {fa:"معمولاً دوست داشته‌ام به دیگران نشان دهم چه کارهایی را خوب بلدم.",en:"I've usually liked to let people know what I can do well.",col:"C"}],
+    [{fa:"دنبال کردن علایق شخصی‌ام برایم مهم‌تر از راحتی و امنیت بوده است.",en:"Pursuing my personal interests has been more important to me than having comfort and security.",col:"H"},
+     {fa:"راحتی و امنیت برایم مهم‌تر از دنبال کردن علایق شخصی‌ام بوده است.",en:"Having comfort and security has been more important to me than pursuing my personal interests.",col:"B"}],
+    [{fa:"وقتی با دیگران اختلاف داشته‌ام، معمولاً کناره گرفته‌ام.",en:"When I've had conflict with others, I've tended to withdraw.",col:"A"},
+     {fa:"وقتی با دیگران اختلاف داشته‌ام، به‌ندرت عقب‌نشینی کرده‌ام.",en:"When I've had conflict with others, I've rarely backed down.",col:"G"}],
+    [{fa:"بیش از حد راحت تسلیم شده‌ام و گذاشته‌ام دیگران مرا تحت فشار بگذارند.",en:"I have given in too easily and let others push me around.",col:"A"},
+     {fa:"با دیگران بیش از حد سازش‌ناپذیر و پرتوقع بوده‌ام.",en:"I have been too uncompromising and demanding with others.",col:"D"}],
+    [{fa:"به‌خاطر روحیهٔ شکست‌ناپذیر و شوخ‌طبعی‌ام قدردانی شده‌ام.",en:"I've been appreciated for my unsinkable spirit and great sense of humour.",col:"I"},
+     {fa:"به‌خاطر قدرت آرام و سخاوت استثنایی‌ام قدردانی شده‌ام.",en:"I've been appreciated for my quiet strength and exceptional generosity.",col:"F"}],
+    [{fa:"بخش زیادی از موفقیتم به‌خاطر استعدادم در ایجاد تأثیر خوب بوده است.",en:"Much of my success has been due to my talent for making a favourable impression.",col:"C"},
+     {fa:'بخش زیادی از موفقیتم با وجود بی‌علاقگی‌ام به تقویت «مهارت‌های بین‌فردی» به دست آمده است.',en:'Much of my success has been achieved despite my lack of interest in developing "interpersonal skills."',col:"H"}]
+  ];
+
+  var answers = new Array(questions.length).fill(null); // stores 'A' or 'B' col per question... actually store chosen option index 0/1
+
+  function persist(){
+    try{ localStorage.setItem('enneagram-answers', JSON.stringify(answers)); }catch(e){}
+  }
+  function restore(){
+    try{
+      var raw = localStorage.getItem('enneagram-answers');
+      if(raw){
+        var arr = JSON.parse(raw);
+        if(Array.isArray(arr) && arr.length === questions.length) answers = arr;
+      }
+    }catch(e){}
+  }
+
+  var qContainer = document.getElementById('questions');
+  var frag = document.createDocumentFragment();
+
+  questions.forEach(function(pair, qi){
+    var card = document.createElement('div');
+    card.className = 'qcard';
+
+    var head = document.createElement('div');
+    head.className = 'qhead';
+    var num = document.createElement('span');
+    num.className = 'qnum';
+    num.textContent = qi + 1;
+    var span = document.createElement('span');
+    span.textContent = 'گزینه‌ای را انتخاب کنید که بهتر شما را نشان می‌دهد';
+    head.appendChild(num); head.appendChild(span);
+    card.appendChild(head);
+
+    var opts = document.createElement('div');
+    opts.className = 'options';
+
+    pair.forEach(function(opt, oi){
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'opt';
+      btn.setAttribute('data-q', qi);
+      btn.setAttribute('data-o', oi);
+      var dot = document.createElement('span'); dot.className = 'dot';
+      var txt = document.createElement('span'); txt.className = 'txt';
+      var fa = document.createElement('span'); fa.className = 'fa'; fa.textContent = opt.fa;
+      var en = document.createElement('span'); en.className = 'en'; en.textContent = opt.en;
+      txt.appendChild(fa); txt.appendChild(en);
+      btn.appendChild(dot); btn.appendChild(txt);
+      btn.addEventListener('click', function(){
+        answers[qi] = oi;
+        persist();
+        updateOptionStates(qi);
+        updateProgress();
+      });
+      opts.appendChild(btn);
+    });
+
+    card.appendChild(opts);
+    frag.appendChild(card);
+  });
+  qContainer.appendChild(frag);
+
+  function updateOptionStates(qi){
+    var btns = qContainer.querySelectorAll('.opt[data-q="'+qi+'"]');
+    btns.forEach(function(b){
+      var oi = Number(b.getAttribute('data-o'));
+      b.classList.toggle('selected', answers[qi] === oi);
+    });
+  }
+
+  var progressFill = document.getElementById('progressFill');
+  var progressText = document.getElementById('progressText');
+  var scoreBtn = document.getElementById('scoreBtn');
+  var remainingHint = document.getElementById('remainingHint');
+  var toFa = function(n){
+    var d = ['۰','۱','۲','۳','۴','۵','۶','۷','۸','۹'];
+    return String(n).split('').map(function(c){ return /[0-9]/.test(c) ? d[c] : c; }).join('');
+  };
+
+  function updateProgress(){
+    var answered = answers.filter(function(a){ return a !== null; }).length;
+    progressFill.style.width = (answered/questions.length*100) + '%';
+    progressText.textContent = toFa(answered) + ' از ' + toFa(questions.length);
+    scoreBtn.disabled = answered === 0;
+    remainingHint.textContent = answered === questions.length ? 'همهٔ سؤال‌ها پاسخ داده شد.' : (toFa(questions.length - answered) + ' سؤال باقی مانده');
+  }
+
+  document.getElementById('resetBtn').addEventListener('click', function(){
+    answers = new Array(questions.length).fill(null);
+    persist();
+    for(var i=0;i<questions.length;i++) updateOptionStates(i);
+    updateProgress();
+    document.getElementById('resultPanel').hidden = true;
+  });
+
+  scoreBtn.addEventListener('click', function(){
+    var counts = {1:0,2:0,3:0,4:0,5:0,6:0,7:0,8:0,9:0};
+    questions.forEach(function(pair, qi){
+      var oi = answers[qi];
+      if(oi === null || oi === undefined) return;
+      var col = pair[oi].col;
+      var t = col2type[col];
+      counts[t] += 1;
+    });
+    renderResult(counts);
+    document.getElementById('resultPanel').hidden = false;
+    document.getElementById('resultPanel').scrollIntoView({behavior:'smooth', block:'start'});
+  });
+
+  function renderResult(counts){
+    var order = Object.keys(counts).map(Number).sort(function(a,b){ return counts[b]-counts[a]; });
+    var max = Math.max.apply(null, order.map(function(t){ return counts[t]; })) || 1;
+
+    var top = document.getElementById('resultTop');
+    top.innerHTML = '';
+    order.slice(0,3).forEach(function(t){
+      var b = document.createElement('div');
+      b.className = 'badge';
+      b.innerHTML = '<span class="sw" style="background:'+types[t].color+'"></span>'+
+                    '<b>تیپ '+toFa(t)+' · '+types[t].fa+'</b>'+
+                    '<span>'+toFa(counts[t])+' امتیاز</span>';
+      top.appendChild(b);
+    });
+
+    var bars = document.getElementById('resultBars');
+    bars.innerHTML = '';
+    order.forEach(function(t){
+      var row = document.createElement('div');
+      row.className = 'bar-row';
+      var pct = (counts[t]/max*100);
+      row.innerHTML =
+        '<span class="lbl"><span class="sw" style="background:'+types[t].color+'"></span>تیپ '+toFa(t)+'</span>'+
+        '<span class="bar-track"><span class="bar-fill" style="width:'+pct+'%; background:'+types[t].color+'"></span></span>'+
+        '<span class="val">'+toFa(counts[t])+'</span>';
+      bars.appendChild(row);
+    });
+  }
+
+  // type grid
+  var typeGrid = document.getElementById('typeGrid');
+  Object.keys(types).map(Number).sort(function(a,b){return a-b;}).forEach(function(t){
+    var el = document.createElement('div');
+    el.className = 'type-card';
+    el.style.setProperty('--tc', types[t].color);
+    el.innerHTML =
+      '<div class="top-row"><div class="type-icon">'+typeIcons[t]+'</div><span class="num">تیپ '+toFa(t)+'</span></div>'+
+      '<h3>'+types[t].fa+'</h3>'+
+      '<span class="en">'+types[t].en+'</span>'+
+      '<p>'+types[t].desc+'</p>';
+    typeGrid.appendChild(el);
+  });
+
+  restore();
+  for(var i=0;i<questions.length;i++) updateOptionStates(i);
+  updateProgress();
+})();
+</script>
+</body>
+</html>
