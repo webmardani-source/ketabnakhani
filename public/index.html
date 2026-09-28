@@ -518,14 +518,22 @@ footer a{color:var(--ink-faint);}
   }
 
   document.getElementById('resetBtn').addEventListener('click', function(){
+    resetQuiz();
+  });
+
+  var lastCounts = null;
+
+  function resetQuiz(){
     answers = new Array(questions.length).fill(null);
+    lastCounts = null;
     persist();
     for(var i=0;i<questions.length;i++) updateOptionStates(i);
     updateProgress();
     document.getElementById('resultPanel').hidden = true;
-  });
-
-  var lastCounts = null;
+    nameInput.value = '';
+    submitStatus.textContent = '';
+    submitStatus.className = 'submit-status';
+  }
 
   scoreBtn.addEventListener('click', function(){
     var counts = {1:0,2:0,3:0,4:0,5:0,6:0,7:0,8:0,9:0};
@@ -572,10 +580,14 @@ footer a{color:var(--ink-faint);}
       if(!res.ok) throw new Error('bad-response');
       return res.json();
     }).then(function(){
-      submitStatus.textContent = 'ثبت شد! پایین همین صفحه، تو جدول نتایج ببینش.';
+      submitStatus.textContent = 'با موفقیت ثبت شد ✅';
       submitStatus.className = 'submit-status ok';
-      nameInput.value = '';
       loadResults();
+      setTimeout(function(){
+        resetQuiz();
+        var resultsSection = document.getElementById('results');
+        if(resultsSection) resultsSection.scrollIntoView({behavior:'smooth', block:'start'});
+      }, 1300);
     }).catch(function(){
       submitStatus.textContent = 'ثبت نشد، دوباره امتحان کن.';
       submitStatus.className = 'submit-status err';
@@ -642,6 +654,58 @@ footer a{color:var(--ink-faint);}
       .slice(0, n || 3);
   }
 
+  // per-type motor/strength/risk/quote, used to write up a submitted quiz result
+  var typeNarrative = {
+    1:{motor:"درست انجام‌دادن کار و رسیدن به استاندارد درست. دلش می‌خواهد هر کاری با دقت و طبق اصول پیش برود.",
+       strength:"دقیق، منظم و قابل‌اعتماد.",
+       risk:"زیادی به خودش یا دیگران سخت می‌گیرد و دیر رضایت می‌دهد.",
+       quote:"بد نیست، ولی می‌شه بهتر از این هم کرد."},
+    2:{motor:"نزدیک بودن به آدم‌ها و مفید بودن برایشان. حضورش وقتی معنا پیدا می‌کند که به کسی کمک کرده باشد.",
+       strength:"گرم، بخشنده و در دسترس.",
+       risk:"نیاز خودش را عقب می‌اندازد تا برای دیگران کم نگذارد.",
+       quote:"تو نگران نباش، من هستم."},
+    3:{motor:"رسیدن به نتیجه و دیده‌شدن برای موفقیتش. انرژی‌اش از پیشرفت و رسیدن به هدف می‌آید.",
+       strength:"کارآمد، هدفمند و متقاعدکننده.",
+       risk:"زیادی خودش را با عملکردش تعریف می‌کند.",
+       quote:"بذار اول تمومش کنیم، بعد حال می‌کنیم."},
+    4:{motor:"معنا و اصالت. دنبال این است که احساسش را واقعی زندگی کند، نه یک نسخهٔ تکراری از بقیه.",
+       strength:"خلاق، عمیق و صادق با احساساتش.",
+       risk:"در دلتنگی یا مقایسهٔ خودش با دیگران گیر می‌کند.",
+       quote:"هیچ‌کس دقیقاً حس من رو نمی‌فهمه."},
+    5:{motor:"فهمیدن قبل از وارد شدن. دوست دارد قبل از هر قدم، موضوع را کامل بفهمد.",
+       strength:"کنجکاو، تحلیل‌گر و مستقل.",
+       risk:"زیادی در فکر می‌ماند و از آدم‌ها فاصله می‌گیرد.",
+       quote:"بذار اول بیشتر بخونم، بعد نظر می‌دم."},
+    6:{motor:"امنیت و قابل‌اعتماد بودن. دوست دارد بداند روی چی می‌شود حساب کرد.",
+       strength:"مسئولیت‌پذیر، آماده برای بدترین حالت و وفادار.",
+       risk:"زیادی نگران و مردد می‌شود.",
+       quote:"بذار یه‌بار دیگه چک کنیم، بد نیست."},
+    7:{motor:"تجربهٔ تازه و لذت. دلش می‌خواهد گزینه‌های باز بمانند و چیز جدید را از دست ندهد.",
+       strength:"پرانرژی، خوش‌بین و منعطف.",
+       risk:"زیاد پخش می‌شود و کارها را نیمه‌کاره می‌گذارد.",
+       quote:"بعداً غصه می‌خوریم، الان بریم یه کار باحال بکنیم."},
+    8:{motor:"کنترل و قدرت. دوست ندارد کسی رویش زور بگوید یا دست‌کمش بگیرد.",
+       strength:"قاطع، محافظ و رک.",
+       risk:"زیادی سلطه‌جو می‌شود و آسیب‌پذیری‌اش را نشان نمی‌دهد.",
+       quote:"راستش رو بگو، وقت تلف نکن."},
+    9:{motor:"آرامش و نبود تنش. دلش می‌خواهد همه چیز روون پیش برود.",
+       strength:"صبور، همراه و آشتی‌دهنده.",
+       risk:"خواسته‌اش را دیر مطرح می‌کند و کارها را به تعویق می‌اندازد.",
+       quote:"مهم نیست، هرچی شما بگید."}
+  };
+
+  function buildQuizNarrative(counts, tops){
+    var primary = tops[0], secondary = tops[1];
+    if(!typeNarrative[primary]) return null;
+    var n = typeNarrative[primary];
+    var motor = n.motor;
+    if(secondary && typeNarrative[secondary] && counts[secondary] >= counts[primary] - 2){
+      motor += ' رگهٔ تیپ '+toFa(secondary)+' ('+types[secondary].fa+') هم به آن '+
+               'کمی حال‌وهوای '+typeNarrative[secondary].strength.replace(/\.$/, '')+' اضافه می‌کند.';
+    }
+    return {motor: motor, strength: n.strength, risk: n.risk, quote: n.quote};
+  }
+
   function renderPeople(list){
     peopleGrid.innerHTML = '';
     if(!list || !list.length){
@@ -672,8 +736,16 @@ footer a{color:var(--ink-faint);}
           '</dl>'+
           (p.quote ? '<div class="quote">«'+escapeHtml(p.quote)+'»</div>' : '');
       } else {
-        var totalAnswered = Object.keys(p.counts||{}).reduce(function(s,k){ return s + (Number(p.counts[k])||0); }, 0);
-        body = '<p style="font-size:13px;color:var(--ink-faint)">از '+toFa(totalAnswered)+' سؤال پاسخ‌داده‌شده، تیپ اصلی احتمالی همان بالاترین امتیاز است.</p>';
+        var narrative = buildQuizNarrative(p.counts || {}, tops);
+        if(narrative){
+          body =
+            '<dl>'+
+              '<dt>موتور اصلی</dt><dd>'+escapeHtml(narrative.motor)+'</dd>'+
+              '<dt>نقطهٔ قوت</dt><dd>'+escapeHtml(narrative.strength)+'</dd>'+
+              '<dt>ریسک احتمالی</dt><dd>'+escapeHtml(narrative.risk)+'</dd>'+
+            '</dl>'+
+            '<div class="quote">«'+escapeHtml(narrative.quote)+'»</div>';
+        }
       }
 
       el.innerHTML = head + body;
