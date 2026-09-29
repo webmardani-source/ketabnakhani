@@ -76,7 +76,16 @@ const SEED_RESULTS = [
     submittedAt: "2026-08-01T08:40:00.000Z" },
   { id: "seed-10", name: "علی", emoji: "🦋", kind: "quiz",
     counts: {1:0,2:8,3:0,4:6,5:0,6:0,7:7,8:0,9:0},
-    submittedAt: "2026-08-01T08:45:00.000Z" }
+    submittedAt: "2026-08-01T08:45:00.000Z" },
+  { id: "seed-11", name: "محسن", kind: "quiz",
+    counts: {1:4,2:7,3:3,4:1,5:5,6:1,7:6,8:8,9:1},
+    submittedAt: "2026-09-29T01:45:52.939Z" },
+  { id: "seed-12", name: "امیرحسین", kind: "quiz",
+    counts: {1:3,2:5,3:5,4:3,5:4,6:2,7:4,8:9,9:1},
+    submittedAt: "2026-09-29T05:11:45.290Z" },
+  { id: "seed-13", name: "عطا", kind: "quiz",
+    counts: {1:4,2:3,3:3,4:0,5:11,6:7,7:1,8:0,9:7},
+    submittedAt: "2026-09-29T12:28:06.955Z" }
 ];
 
 function ensureDataFile() {
