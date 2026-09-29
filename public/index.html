@@ -719,7 +719,7 @@ footer a{color:var(--ink-faint);}
     var chips = order.map(function(t){
       if(!types[t]) return '';
       return '<span class="count-chip"><span class="sw" style="background:'+types[t].color+'"></span>'+
-             'تیپ '+toFa(t)+' <b>'+toFa(counts[t]||0)+'</b></span>';
+             types[t].fa+' <b>'+toFa(counts[t]||0)+'</b></span>';
     }).join('');
     return '<div class="count-row">'+chips+'</div>';
   }
